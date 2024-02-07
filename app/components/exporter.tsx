@@ -307,7 +307,7 @@ export function PreviewActions(props: {
     setShouldExport(false);
 
     var api: ClientApi;
-    if (config.modelConfig.model === "gemini-pro") {
+    if (config.modelConfig.model.startsWith("gemini")) {
       api = new ClientApi(ModelProvider.GeminiPro);
     } else {
       api = new ClientApi(ModelProvider.GPT);
@@ -538,9 +538,9 @@ export function ImagePreviewer(props: {
           </div>
 
           <div>
-            <div className={styles["main-title"]}>NextChat</div>
+            <div className={styles["main-title"]}>ChatGPT | Niansuh</div>
             <div className={styles["sub-title"]}>
-              github.com/Yidadaa/ChatGPT-Next-Web
+              github.com/Niansuh/ChatGPT
             </div>
             <div className={styles["icons"]}>
               <ExportAvatar avatar={config.avatar} />
