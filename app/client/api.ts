@@ -109,7 +109,7 @@ export class ClientApi {
         {
           from: "human",
           value:
-            "Share from [ChatGPT | Niansuh]: https://github.com/Niansuh/ChatGPT",
+            "Share from [NextChat]: https://github.com/Niansuh/ChatGPT",
         },
       ]);
     // 敬告二开开发者们，为了开源大模型的发展，请不要修改上述消息，此消息用于后续数据清洗使用
@@ -144,10 +144,10 @@ export function getHeaders() {
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
     "x-requested-with": "XMLHttpRequest",
-    "Accept": "application/json",
+    Accept: "application/json",
   };
   const modelConfig = useChatStore.getState().currentSession().mask.modelConfig;
-  const isGoogle = modelConfig.model === "gemini-pro";
+  const isGoogle = modelConfig.model.startsWith("gemini");
   const isAzure = accessStore.provider === ServiceProvider.Azure;
   const authHeader = isAzure ? "api-key" : "Authorization";
   const apiKey = isGoogle
@@ -155,20 +155,23 @@ export function getHeaders() {
     : isAzure
     ? accessStore.azureApiKey
     : accessStore.openaiApiKey;
-
+  const clientConfig = getClientConfig();
   const makeBearer = (s: string) => `${isAzure ? "" : "Bearer "}${s.trim()}`;
   const validString = (x: string) => x && x.length > 0;
 
-  // use user's api key first
-  if (validString(apiKey)) {
-    headers[authHeader] = makeBearer(apiKey);
-  } else if (
-    accessStore.enabledAccessControl() &&
-    validString(accessStore.accessCode)
-  ) {
-    headers[authHeader] = makeBearer(
-      ACCESS_CODE_PREFIX + accessStore.accessCode,
-    );
+  // when using google api in app, not set auth header
+  if (!(isGoogle && clientConfig?.isApp)) {
+    // use user's api key first
+    if (validString(apiKey)) {
+      headers[authHeader] = makeBearer(apiKey);
+    } else if (
+      accessStore.enabledAccessControl() &&
+      validString(accessStore.accessCode)
+    ) {
+      headers[authHeader] = makeBearer(
+        ACCESS_CODE_PREFIX + accessStore.accessCode,
+      );
+    }
   }
 
   return headers;
