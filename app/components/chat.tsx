@@ -960,7 +960,7 @@ function _Chat() {
     }
 
     setHitBottom(isHitBottom);
-    setAutoScroll(isHitBottom);
+    setAutoScroll(false);
   };
 
   function scrollToBottom() {
