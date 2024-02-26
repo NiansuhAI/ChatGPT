@@ -1,4 +1,4 @@
-# Frequently Asked Questions
+# Frequently Asked Questions (FAQs)
 
 ## How to get help quickly?
 
